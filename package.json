@@ -6,6 +6,7 @@
   "author": "Jackson Owens <jackson_owens@alumni.brown.edu>",
   "license": "MIT",
   "devDependencies": {
+    "gh-pages": "^1.2.0",
     "@parcel/transformer-elm": "^2.3.2",
     "cssnano": "^4.1.10",
     "elm": "^0.19.1-5",
@@ -13,6 +14,7 @@
     "node-elm-compiler": "^5.0.4",
     "parcel-bundler": "1.12.3"
   },"scripts": {
-    "deploy": "npm run build && gh-pages -d dist"
-  }
+    "deploy": "gh-pages -d dist"
+  },
+  "homepage": "https://Aryan-5401.github.io/codenameswebsite"
 }
