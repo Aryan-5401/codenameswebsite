@@ -29,11 +29,11 @@ init url =
         baseUrl =
             case url.host of
                 "localhost" ->
-                    { url | host = "codenamesgreen.herokuapp.com", path = "", query = Nothing, fragment = Nothing }
+                    { url | port_ = Just 8080, path = "", query = Nothing, fragment = Nothing }
 
-                "www.codenamesgreen.com" ->
+                "https://aryan-5401.github.io/codenameswebsite" ->
                     -- TODO: Avoid hardcoding any specific hostnames.
-                    { url | host = "codenamesgreen.herokuapp.com", path = "", query = Nothing, fragment = Nothing }
+                    { url | host = "https://aryan-5401.github.io/codenameswebsite", path = "", query = Nothing, fragment = Nothing }
 
                 _ ->
                     { url | host = "codenamesgreen.herokuapp.com", path = "", query = Nothing, fragment = Nothing }
@@ -64,6 +64,7 @@ type alias Event =
     , side : Maybe Side
     , index : Int
     , message : Array.Array String
+    , num_target_words : Int
     }
 
 
@@ -179,6 +180,7 @@ chat :
     , toMsg : Result Http.Error () -> msg
     , message : Array.Array String
     , client : Client
+    , num_target_words : Int
     }
     -> Cmd msg
 chat r =
@@ -193,6 +195,7 @@ chat r =
                     , ( "name", E.string r.player.user.name )
                     , ( "team", Side.encodeMaybe r.player.side )
                     , ( "message", E.array E.string r.message )
+                    , ( "num_target_words", E.int r.num_target_words)
                     ]
                 )
         , expect = Http.expectWhatever r.toMsg
@@ -286,7 +289,7 @@ decodeUpdate =
 
 decodeEvent : D.Decoder Event
 decodeEvent =
-    D.map7 Event
+    D.map8 Event
         (D.field "number" D.int)
         (D.field "type" D.string)
         (D.field "player_id" D.string)
@@ -299,4 +302,5 @@ decodeEvent =
                 , D.succeed (Array.repeat 6 "")
             ]
         )
+        (D.field "num_target_words" D.int)
         
