@@ -13381,7 +13381,7 @@ var $author$project$Game$viewWelcomeMessage = function (model) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('\n    Welcome! Codenames Green is a cooperative word game. Players divide into\n    two sides. Each side has nine green words that they must provide clues for.\n    Sides take turns giving one-word clues, plus a number indicating the\n    number of words it applies to. Then the other side guesses until they tap\n    a non-green word or choose to stop. Tapping a black instantly loses the game.\n    Try to reveal all green words before the timer counter reaches 9.\n    Good luck, have fun!\n    ')
+						$elm$html$Html$text('\n    Welcome! Codenames Green is a cooperative word game. Players divide into\n    two sides. Each side has nine green words that they must provide clues for.\n    Sides take turns giving one-word clues, and the target words on the board \n    that it applies to according to the cluegiver. Then the other side guesses until they tap\n    a non-green word or choose to stop. Tapping a black instantly loses the game.\n    Try to reveal all green words before the timer counter reaches 9.\n    Good luck, have fun!\n    ')
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -18607,7 +18607,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61388" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60333" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
