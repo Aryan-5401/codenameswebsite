@@ -11557,10 +11557,11 @@ var $author$project$Color$decode = A2(
 		}
 	},
 	$elm$json$Json$Decode$string);
-var $author$project$Api$Event = F8(
-	function (number, typ, playerId, name, side, index, message, num_target_words) {
-		return {index: index, message: message, name: name, num_target_words: num_target_words, number: number, playerId: playerId, side: side, typ: typ};
+var $author$project$Api$Event = F9(
+	function (number, typ, playerId, name, side, index, message, num_target_words, rationale) {
+		return {index: index, message: message, name: name, num_target_words: num_target_words, number: number, playerId: playerId, rationale: rationale, side: side, typ: typ};
 	});
+var $elm_community$json_extra$Json$Decode$Extra$andMap = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$array = _Json_decodeArray;
 var $author$project$Side$A = {$: 'A'};
 var $author$project$Side$B = {$: 'B'};
@@ -11579,7 +11580,6 @@ var $author$project$Side$decodeMaybe = A2(
 		}
 	},
 	$elm$json$Json$Decode$int);
-var $elm$json$Json$Decode$map8 = _Json_map8;
 var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $elm$core$Array$repeat = F2(
 	function (n, e) {
@@ -11590,26 +11590,43 @@ var $elm$core$Array$repeat = F2(
 				return e;
 			});
 	});
-var $author$project$Api$decodeEvent = A9(
-	$elm$json$Json$Decode$map8,
-	$author$project$Api$Event,
-	A2($elm$json$Json$Decode$field, 'number', $elm$json$Json$Decode$int),
-	A2($elm$json$Json$Decode$field, 'type', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'player_id', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'team', $author$project$Side$decodeMaybe),
-	A2($elm$json$Json$Decode$field, 'index', $elm$json$Json$Decode$int),
-	$elm$json$Json$Decode$oneOf(
-		_List_fromArray(
-			[
+var $author$project$Api$decodeEvent = A2(
+	$elm_community$json_extra$Json$Decode$Extra$andMap,
+	A2($elm$json$Json$Decode$field, 'rationale', $elm$json$Json$Decode$string),
+	A2(
+		$elm_community$json_extra$Json$Decode$Extra$andMap,
+		A2($elm$json$Json$Decode$field, 'num_target_words', $elm$json$Json$Decode$int),
+		A2(
+			$elm_community$json_extra$Json$Decode$Extra$andMap,
+			$elm$json$Json$Decode$oneOf(
+				_List_fromArray(
+					[
+						A2(
+						$elm$json$Json$Decode$field,
+						'message',
+						$elm$json$Json$Decode$array($elm$json$Json$Decode$string)),
+						$elm$json$Json$Decode$succeed(
+						A2($elm$core$Array$repeat, 7, ''))
+					])),
+			A2(
+				$elm_community$json_extra$Json$Decode$Extra$andMap,
+				A2($elm$json$Json$Decode$field, 'index', $elm$json$Json$Decode$int),
 				A2(
-				$elm$json$Json$Decode$field,
-				'message',
-				$elm$json$Json$Decode$array($elm$json$Json$Decode$string)),
-				$elm$json$Json$Decode$succeed(
-				A2($elm$core$Array$repeat, 6, ''))
-			])),
-	A2($elm$json$Json$Decode$field, 'num_target_words', $elm$json$Json$Decode$int));
+					$elm_community$json_extra$Json$Decode$Extra$andMap,
+					A2($elm$json$Json$Decode$field, 'team', $author$project$Side$decodeMaybe),
+					A2(
+						$elm_community$json_extra$Json$Decode$Extra$andMap,
+						A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+						A2(
+							$elm_community$json_extra$Json$Decode$Extra$andMap,
+							A2($elm$json$Json$Decode$field, 'player_id', $elm$json$Json$Decode$string),
+							A2(
+								$elm_community$json_extra$Json$Decode$Extra$andMap,
+								A2($elm$json$Json$Decode$field, 'type', $elm$json$Json$Decode$string),
+								A2(
+									$elm_community$json_extra$Json$Decode$Extra$andMap,
+									A2($elm$json$Json$Decode$field, 'number', $elm$json$Json$Decode$int),
+									$elm$json$Json$Decode$succeed($author$project$Api$Event))))))))));
 var $elm$json$Json$Decode$map6 = _Json_map6;
 var $author$project$Api$decoderGameState = A7(
 	$elm$json$Json$Decode$map6,
@@ -11818,7 +11835,10 @@ var $author$project$Api$chat = function (r) {
 							A2($elm$json$Json$Encode$array, $elm$json$Json$Encode$string, r.message)),
 							_Utils_Tuple2(
 							'num_target_words',
-							$elm$json$Json$Encode$int(r.num_target_words))
+							$elm$json$Json$Encode$int(r.num_target_words)),
+							_Utils_Tuple2(
+							'rationale',
+							$elm$json$Json$Encode$string(r.rationale))
 						]))),
 			expect: $elm$http$Http$expectWhatever(r.toMsg),
 			url: A2($author$project$Api$endpointUrl, r.client.baseUrl, '/chat')
@@ -12772,7 +12792,7 @@ var $author$project$Main$update = F2(
 									page: A3(
 										$author$project$Main$GameInProgress,
 										g,
-										A2($elm$core$Array$repeat, 6, ''),
+										A2($elm$core$Array$repeat, 7, ''),
 										gameView)
 								}),
 							$author$project$Api$chat(
@@ -12780,8 +12800,12 @@ var $author$project$Main$update = F2(
 									client: model.apiClient,
 									gameId: g.id,
 									message: message,
-									num_target_words: 69,
+									num_target_words: -1,
 									player: g.player,
+									rationale: A2(
+										$elm$core$Maybe$withDefault,
+										'',
+										A2($elm$core$Array$get, 6, message)),
 									seed: g.seed,
 									toMsg: $elm$core$Basics$always($author$project$Main$NoOp)
 								}));
@@ -12873,7 +12897,7 @@ var $author$project$Main$update = F2(
 											page: A3(
 												$author$project$Main$GameInProgress,
 												gameModel,
-												A2($elm$core$Array$repeat, 6, ''),
+												A2($elm$core$Array$repeat, 7, ''),
 												$author$project$Main$ShowDefault)
 										}),
 									gameCmd);
@@ -12890,7 +12914,7 @@ var $author$project$Main$update = F2(
 											page: A3(
 												$author$project$Main$GameInProgress,
 												gameModel,
-												A2($elm$core$Array$repeat, 6, ''),
+												A2($elm$core$Array$repeat, 7, ''),
 												$author$project$Main$ShowDefault)
 										}),
 									gameCmd);
@@ -13176,6 +13200,12 @@ var $author$project$Main$viewButtonRow = A2(
 			A2($elm$html$Html$div, _List_Nil, _List_Nil)
 		]));
 var $author$project$Main$SendChat = {$: 'SendChat'};
+var $elm$html$Html$Attributes$cols = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'cols',
+		$elm$core$String$fromInt(n));
+};
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $author$project$Main$getSubChat = F2(
 	function (idx, messageArray) {
@@ -13206,6 +13236,12 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 			$elm$html$Html$Events$alwaysPreventDefault,
 			$elm$json$Json$Decode$succeed(msg)));
 };
+var $elm$html$Html$Attributes$rows = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'rows',
+		$elm$core$String$fromInt(n));
+};
 var $author$project$Main$ChatMessageChanged = function (a) {
 	return {$: 'ChatMessageChanged', a: a};
 };
@@ -13214,6 +13250,7 @@ var $author$project$Main$setField = F3(
 		return $author$project$Main$ChatMessageChanged(
 			A3($elm$core$Array$set, idx, message, messageArray));
 	});
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$core$Maybe$map2 = F3(
 	function (func, ma, mb) {
 		if (ma.$ === 'Nothing') {
@@ -13557,6 +13594,25 @@ var $author$project$Main$viewEventBox = F3(
 											A2($author$project$Main$getSubChat, 5, chatMessage)),
 											$elm$html$Html$Events$onInput(
 											A2($author$project$Main$setField, 5, chatMessage))
+										]),
+									_List_Nil)
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Rationale/ \n \n Explanation \n \n'),
+									A2(
+									$elm$html$Html$textarea,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$rows(3),
+											$elm$html$Html$Attributes$cols(40),
+											$elm$html$Html$Attributes$value(
+											A2($author$project$Main$getSubChat, 6, chatMessage)),
+											$elm$html$Html$Events$onInput(
+											A2($author$project$Main$setField, 6, chatMessage))
 										]),
 									_List_Nil)
 								])),
@@ -17995,7 +18051,7 @@ var $author$project$Main$main = $elm$browser$Browser$application(
 		update: $author$project$Main$update,
 		view: $author$project$Main$view
 	});
-_Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Api.Event":{"args":[],"type":"{ number : Basics.Int, typ : String.String, playerId : String.String, name : String.String, side : Maybe.Maybe Side.Side, index : Basics.Int, message : Array.Array String.String, num_target_words : Basics.Int }"},"Api.GameState":{"args":[],"type":"{ id : String.String, seed : String.String, words : List.List String.String, events : List.List Api.Event, oneLayout : List.List Color.Color, twoLayout : List.List Color.Color }"},"Api.Index":{"args":[],"type":"{ autogeneratedId : String.String }"},"Main.Settings":{"args":[],"type":"{ name : String.String }"},"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Cell.Cell":{"args":[],"type":"{ index : Basics.Int, word : String.String, a : ( Basics.Bool, Color.Color ), b : ( Basics.Bool, Color.Color ) }"},"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"},"Api.Update":{"args":[],"type":"{ seed : String.String, events : List.List Api.Event }"}},"unions":{"Main.Msg":{"args":[],"tags":{"NoOp":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"IndexData":["Result.Result Http.Error Api.Index"],"IdChanged":["String.String"],"SubmitNewGame":[],"NextGame":[],"PickSide":["Side.Side"],"GameUpdate":["Game.Msg"],"GotGame":["Result.Result Http.Error Api.GameState"],"ChatMessageChanged":["Array.Array String.String"],"SendChat":[],"ToggleSettings":[],"SettingsEdit":["Main.Settings -> Main.Settings"],"SaveSettings":["Main.Settings"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Color.Color":{"args":[],"tags":{"Tan":[],"Green":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Game.Msg":{"args":[],"tags":{"NoOp":[],"LongPoll":["String.String","String.String","Result.Result Http.Error Api.Update"],"GameUpdate":["Result.Result Http.Error Api.Update"],"WordPicked":["Cell.Cell"],"ToggleKeyView":["Game.KeyView"],"DoneGuessing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Side.Side":{"args":[],"tags":{"A":[],"B":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Game.KeyView":{"args":[],"tags":{"ShowWords":[],"ShowKeycard":[]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});
+_Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Api.Event":{"args":[],"type":"{ number : Basics.Int, typ : String.String, playerId : String.String, name : String.String, side : Maybe.Maybe Side.Side, index : Basics.Int, message : Array.Array String.String, num_target_words : Basics.Int, rationale : String.String }"},"Api.GameState":{"args":[],"type":"{ id : String.String, seed : String.String, words : List.List String.String, events : List.List Api.Event, oneLayout : List.List Color.Color, twoLayout : List.List Color.Color }"},"Api.Index":{"args":[],"type":"{ autogeneratedId : String.String }"},"Main.Settings":{"args":[],"type":"{ name : String.String }"},"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Cell.Cell":{"args":[],"type":"{ index : Basics.Int, word : String.String, a : ( Basics.Bool, Color.Color ), b : ( Basics.Bool, Color.Color ) }"},"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"},"Api.Update":{"args":[],"type":"{ seed : String.String, events : List.List Api.Event }"}},"unions":{"Main.Msg":{"args":[],"tags":{"NoOp":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"IndexData":["Result.Result Http.Error Api.Index"],"IdChanged":["String.String"],"SubmitNewGame":[],"NextGame":[],"PickSide":["Side.Side"],"GameUpdate":["Game.Msg"],"GotGame":["Result.Result Http.Error Api.GameState"],"ChatMessageChanged":["Array.Array String.String"],"SendChat":[],"ToggleSettings":[],"SettingsEdit":["Main.Settings -> Main.Settings"],"SaveSettings":["Main.Settings"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Color.Color":{"args":[],"tags":{"Tan":[],"Green":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Game.Msg":{"args":[],"tags":{"NoOp":[],"LongPoll":["String.String","String.String","Result.Result Http.Error Api.Update"],"GameUpdate":["Result.Result Http.Error Api.Update"],"WordPicked":["Cell.Cell"],"ToggleKeyView":["Game.KeyView"],"DoneGuessing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Side.Side":{"args":[],"tags":{"A":[],"B":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Game.KeyView":{"args":[],"tags":{"ShowWords":[],"ShowKeycard":[]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});
 
 //////////////////// HMR BEGIN ////////////////////
 
@@ -18607,7 +18663,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60333" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49767" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
