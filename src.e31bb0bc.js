@@ -13048,6 +13048,41 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 				$elm$core$Tuple$first,
 				A2($elm$core$List$filter, $elm$core$Tuple$second, classes))));
 };
+var $author$project$Game$lastEventObj = function (m) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		A9(
+			$author$project$Api$Event,
+			0,
+			'',
+			'',
+			'',
+			$elm$core$Maybe$Just($author$project$Side$A),
+			0,
+			A2($elm$core$Array$repeat, 1, ''),
+			0,
+			''),
+		$elm$core$List$head(m.events));
+};
+var $elm$virtual_dom$VirtualDom$lazy4 = _VirtualDom_lazy4;
+var $elm$html$Html$Lazy$lazy4 = $elm$virtual_dom$VirtualDom$lazy4;
+var $author$project$Game$secondLastEventObj = function (m) {
+	return A2(
+		$elm$core$Maybe$withDefault,
+		A9(
+			$author$project$Api$Event,
+			0,
+			'',
+			'',
+			'',
+			$elm$core$Maybe$Just($author$project$Side$B),
+			0,
+			A2($elm$core$Array$repeat, 1, ''),
+			0,
+			''),
+		$elm$core$List$head(
+			A2($elm$core$List$drop, 1, m.events)));
+};
 var $author$project$Cell$condList = function (list) {
 	return A2(
 		$elm$core$List$map,
@@ -13064,8 +13099,8 @@ var $author$project$Cell$timeTokenIcon = F2(
 			return _Utils_eq(s, side) ? 'ion-ios-arrow-dropdown-circle' : 'ion-ios-arrow-dropup-circle';
 		}
 	});
-var $author$project$Cell$view = F3(
-	function (viewerSide, msg, cell) {
+var $author$project$Cell$view = F4(
+	function (viewerSide, chatSentOrNot, msg, cell) {
 		var _v0 = $author$project$Cell$display(cell);
 		switch (_v0.$) {
 			case 'ExposedGreen':
@@ -13098,12 +13133,10 @@ var $author$project$Cell$view = F3(
 				var pickable = A2(
 					$elm$core$Maybe$withDefault,
 					false,
-					A2(
-						$elm$core$Maybe$map,
+					$elm$core$Maybe$map(
 						function (side) {
 							return (_Utils_eq(side, $author$project$Side$A) && (!guessedB)) || (_Utils_eq(side, $author$project$Side$B) && (!guessedA));
-						},
-						viewerSide));
+						})(viewerSide)) && chatSentOrNot;
 				return A2(
 					$elm$html$Html$div,
 					$author$project$Cell$condList(
@@ -13183,7 +13216,25 @@ var $author$project$Game$viewBoard = function (model) {
 			function (c) {
 				return _Utils_Tuple2(
 					c.word,
-					A4($elm$html$Html$Lazy$lazy3, $author$project$Cell$view, model.player.side, tapMsg, c));
+					A5(
+						$elm$html$Html$Lazy$lazy4,
+						$author$project$Cell$view,
+						model.player.side,
+						!($elm$core$List$isEmpty(model.events) || ((_Utils_eq(
+							$author$project$Game$lastEventObj(model).side,
+							$elm$core$Maybe$Just(
+								$author$project$Side$opposite(
+									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && ($author$project$Game$lastEventObj(model).typ !== 'chat')) || (($elm$core$List$length(model.events) >= 2) && (_Utils_eq(
+							$author$project$Game$secondLastEventObj(model).side,
+							$elm$core$Maybe$Just(
+								$author$project$Side$opposite(
+									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && (($author$project$Game$secondLastEventObj(model).typ !== 'chat') && (_Utils_eq(
+							$author$project$Game$lastEventObj(model).side,
+							$elm$core$Maybe$Just(
+								$author$project$Side$opposite(
+									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && ($author$project$Game$lastEventObj(model).typ === 'end_turn'))))))),
+						tapMsg,
+						c));
 			},
 			$elm$core$Array$toList(model.cells)));
 };
@@ -14119,7 +14170,7 @@ var $author$project$Game$viewStatus = function (model) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									$elm$html$Html$text('You\'re guessing.')
+									$elm$html$Html$text('You\'re guessing. If you cannot click on any of the words on the board yet, please wait for the other side to send a clue in the chatbox first.')
 								])),
 						(model.guessesThisTurn > 0) ? _List_fromArray(
 							[
@@ -14166,7 +14217,7 @@ var $author$project$Game$viewStatus = function (model) {
 							_List_Nil,
 							_List_fromArray(
 								[
-									$elm$html$Html$text('You\'re clue giving.')
+									$elm$html$Html$text('You\'re clue giving. The other side cannot start guessing until you send a clue in the chatbox.')
 								]))
 						]),
 					_List_fromArray(
@@ -18663,7 +18714,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49767" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59066" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
