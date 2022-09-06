@@ -13064,8 +13064,8 @@ var $author$project$Game$lastEventObj = function (m) {
 			''),
 		$elm$core$List$head(m.events));
 };
-var $elm$virtual_dom$VirtualDom$lazy4 = _VirtualDom_lazy4;
-var $elm$html$Html$Lazy$lazy4 = $elm$virtual_dom$VirtualDom$lazy4;
+var $elm$virtual_dom$VirtualDom$lazy5 = _VirtualDom_lazy5;
+var $elm$html$Html$Lazy$lazy5 = $elm$virtual_dom$VirtualDom$lazy5;
 var $author$project$Game$secondLastEventObj = function (m) {
 	return A2(
 		$elm$core$Maybe$withDefault,
@@ -13099,8 +13099,8 @@ var $author$project$Cell$timeTokenIcon = F2(
 			return _Utils_eq(s, side) ? 'ion-ios-arrow-dropdown-circle' : 'ion-ios-arrow-dropup-circle';
 		}
 	});
-var $author$project$Cell$view = F4(
-	function (viewerSide, chatSentOrNot, msg, cell) {
+var $author$project$Cell$view = F5(
+	function (viewerSide, chatSentOrNot, justJoined, msg, cell) {
 		var _v0 = $author$project$Cell$display(cell);
 		switch (_v0.$) {
 			case 'ExposedGreen':
@@ -13130,13 +13130,13 @@ var $author$project$Cell$view = F4(
 			default:
 				var guessedA = _v0.a;
 				var guessedB = _v0.b;
-				var pickable = A2(
+				var pickable = (!justJoined) && (A2(
 					$elm$core$Maybe$withDefault,
 					false,
 					$elm$core$Maybe$map(
 						function (side) {
 							return (_Utils_eq(side, $author$project$Side$A) && (!guessedB)) || (_Utils_eq(side, $author$project$Side$B) && (!guessedA));
-						})(viewerSide)) && chatSentOrNot;
+						})(viewerSide)) && chatSentOrNot);
 				return A2(
 					$elm$html$Html$div,
 					$author$project$Cell$condList(
@@ -13216,23 +13216,26 @@ var $author$project$Game$viewBoard = function (model) {
 			function (c) {
 				return _Utils_Tuple2(
 					c.word,
-					A5(
-						$elm$html$Html$Lazy$lazy4,
+					A6(
+						$elm$html$Html$Lazy$lazy5,
 						$author$project$Cell$view,
 						model.player.side,
-						!($elm$core$List$isEmpty(model.events) || ((_Utils_eq(
+						(_Utils_eq(
 							$author$project$Game$lastEventObj(model).side,
 							$elm$core$Maybe$Just(
 								$author$project$Side$opposite(
-									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && ($author$project$Game$lastEventObj(model).typ !== 'chat')) || (($elm$core$List$length(model.events) >= 2) && (_Utils_eq(
+									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && ($author$project$Game$lastEventObj(model).typ === 'chat')) || ((($elm$core$List$length(model.events) >= 2) && (_Utils_eq(
 							$author$project$Game$secondLastEventObj(model).side,
 							$elm$core$Maybe$Just(
 								$author$project$Side$opposite(
-									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && (($author$project$Game$secondLastEventObj(model).typ !== 'chat') && (_Utils_eq(
+									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && (($author$project$Game$secondLastEventObj(model).typ === 'chat') && (_Utils_eq(
 							$author$project$Game$lastEventObj(model).side,
 							$elm$core$Maybe$Just(
 								$author$project$Side$opposite(
-									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && ($author$project$Game$lastEventObj(model).typ === 'end_turn'))))))),
+									A2($elm$core$Maybe$withDefault, $author$project$Side$A, model.player.side)))) && ($author$project$Game$lastEventObj(model).typ === 'end_turn'))))) || (_Utils_eq(
+							$author$project$Game$lastEventObj(model).side,
+							model.turn) && ($author$project$Game$lastEventObj(model).typ === 'guess'))),
+						$author$project$Game$lastEventObj(model).typ === 'join_side',
 						tapMsg,
 						c));
 			},
@@ -18714,7 +18717,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59066" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65373" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
