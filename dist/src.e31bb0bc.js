@@ -11557,10 +11557,31 @@ var $author$project$Color$decode = A2(
 		}
 	},
 	$elm$json$Json$Decode$string);
-var $author$project$Api$Event = F9(
-	function (number, typ, playerId, name, side, index, message, num_target_words, rationale) {
-		return {index: index, message: message, name: name, num_target_words: num_target_words, number: number, playerId: playerId, rationale: rationale, side: side, typ: typ};
-	});
+var $author$project$Api$Event = function (number) {
+	return function (typ) {
+		return function (playerId) {
+			return function (name) {
+				return function (side) {
+					return function (index) {
+						return function (message) {
+							return function (num_target_words) {
+								return function (rationale) {
+									return function (user_age) {
+										return function (user_gender) {
+											return function (user_country) {
+												return {index: index, message: message, name: name, num_target_words: num_target_words, number: number, playerId: playerId, rationale: rationale, side: side, typ: typ, user_age: user_age, user_country: user_country, user_gender: user_gender};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var $elm_community$json_extra$Json$Decode$Extra$andMap = $elm$json$Json$Decode$map2($elm$core$Basics$apR);
 var $elm$json$Json$Decode$array = _Json_decodeArray;
 var $author$project$Side$A = {$: 'A'};
@@ -11592,41 +11613,50 @@ var $elm$core$Array$repeat = F2(
 	});
 var $author$project$Api$decodeEvent = A2(
 	$elm_community$json_extra$Json$Decode$Extra$andMap,
-	A2($elm$json$Json$Decode$field, 'rationale', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'user_country', $elm$json$Json$Decode$string),
 	A2(
 		$elm_community$json_extra$Json$Decode$Extra$andMap,
-		A2($elm$json$Json$Decode$field, 'num_target_words', $elm$json$Json$Decode$int),
+		A2($elm$json$Json$Decode$field, 'user_gender', $elm$json$Json$Decode$string),
 		A2(
 			$elm_community$json_extra$Json$Decode$Extra$andMap,
-			$elm$json$Json$Decode$oneOf(
-				_List_fromArray(
-					[
-						A2(
-						$elm$json$Json$Decode$field,
-						'message',
-						$elm$json$Json$Decode$array($elm$json$Json$Decode$string)),
-						$elm$json$Json$Decode$succeed(
-						A2($elm$core$Array$repeat, 7, ''))
-					])),
+			A2($elm$json$Json$Decode$field, 'user_age', $elm$json$Json$Decode$string),
 			A2(
 				$elm_community$json_extra$Json$Decode$Extra$andMap,
-				A2($elm$json$Json$Decode$field, 'index', $elm$json$Json$Decode$int),
+				A2($elm$json$Json$Decode$field, 'rationale', $elm$json$Json$Decode$string),
 				A2(
 					$elm_community$json_extra$Json$Decode$Extra$andMap,
-					A2($elm$json$Json$Decode$field, 'team', $author$project$Side$decodeMaybe),
+					A2($elm$json$Json$Decode$field, 'num_target_words', $elm$json$Json$Decode$int),
 					A2(
 						$elm_community$json_extra$Json$Decode$Extra$andMap,
-						A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+						$elm$json$Json$Decode$oneOf(
+							_List_fromArray(
+								[
+									A2(
+									$elm$json$Json$Decode$field,
+									'message',
+									$elm$json$Json$Decode$array($elm$json$Json$Decode$string)),
+									$elm$json$Json$Decode$succeed(
+									A2($elm$core$Array$repeat, 7, ''))
+								])),
 						A2(
 							$elm_community$json_extra$Json$Decode$Extra$andMap,
-							A2($elm$json$Json$Decode$field, 'player_id', $elm$json$Json$Decode$string),
+							A2($elm$json$Json$Decode$field, 'index', $elm$json$Json$Decode$int),
 							A2(
 								$elm_community$json_extra$Json$Decode$Extra$andMap,
-								A2($elm$json$Json$Decode$field, 'type', $elm$json$Json$Decode$string),
+								A2($elm$json$Json$Decode$field, 'team', $author$project$Side$decodeMaybe),
 								A2(
 									$elm_community$json_extra$Json$Decode$Extra$andMap,
-									A2($elm$json$Json$Decode$field, 'number', $elm$json$Json$Decode$int),
-									$elm$json$Json$Decode$succeed($author$project$Api$Event))))))))));
+									A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+									A2(
+										$elm_community$json_extra$Json$Decode$Extra$andMap,
+										A2($elm$json$Json$Decode$field, 'player_id', $elm$json$Json$Decode$string),
+										A2(
+											$elm_community$json_extra$Json$Decode$Extra$andMap,
+											A2($elm$json$Json$Decode$field, 'type', $elm$json$Json$Decode$string),
+											A2(
+												$elm_community$json_extra$Json$Decode$Extra$andMap,
+												A2($elm$json$Json$Decode$field, 'number', $elm$json$Json$Decode$int),
+												$elm$json$Json$Decode$succeed($author$project$Api$Event)))))))))))));
 var $elm$json$Json$Decode$map6 = _Json_map6;
 var $author$project$Api$decoderGameState = A7(
 	$elm$json$Json$Decode$map6,
@@ -11670,6 +11700,15 @@ var $author$project$Api$maybeMakeGame = function (r) {
 							'player_id',
 							$elm$json$Json$Encode$string(r.playerId)),
 							_Utils_Tuple2(
+							'user_age',
+							$elm$json$Json$Encode$string(r.userAge)),
+							_Utils_Tuple2(
+							'user_gender',
+							$elm$json$Json$Encode$string(r.userGender)),
+							_Utils_Tuple2(
+							'user_country',
+							$elm$json$Json$Encode$string(r.userCountry)),
+							_Utils_Tuple2(
 							'prev_seed',
 							function () {
 								var _v0 = r.prevSeed;
@@ -11694,7 +11733,7 @@ var $author$project$Main$stepGameView = F3(
 					page: $author$project$Main$GameLoading(id)
 				}),
 			$author$project$Api$maybeMakeGame(
-				{client: model.apiClient, name: model.user.name, playerId: model.user.id, prevSeed: prevSeed, toMsg: $author$project$Main$GotGame}));
+				{client: model.apiClient, name: model.user.name, playerId: model.user.id, prevSeed: prevSeed, toMsg: $author$project$Main$GotGame, userAge: model.user.age, userCountry: model.user.country, userGender: model.user.gender}));
 	});
 var $author$project$Main$stepUrl = F2(
 	function (url, model) {
@@ -12689,7 +12728,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						model,
 						$author$project$Api$maybeMakeGame(
-							{client: model.apiClient, name: model.user.name, playerId: model.user.id, prevSeed: $elm$core$Maybe$Nothing, toMsg: $author$project$Main$GotGame}));
+							{client: model.apiClient, name: model.user.name, playerId: model.user.id, prevSeed: $elm$core$Maybe$Nothing, toMsg: $author$project$Main$GotGame, userAge: model.user.age, userCountry: model.user.country, userGender: model.user.gender}));
 				case 'NextGame':
 					if (_v0.b.$ === 'GameInProgress') {
 						var _v3 = _v0.a;
@@ -13051,17 +13090,9 @@ var $elm$html$Html$Attributes$classList = function (classes) {
 var $author$project$Game$lastEventObj = function (m) {
 	return A2(
 		$elm$core$Maybe$withDefault,
-		A9(
-			$author$project$Api$Event,
-			0,
-			'',
-			'',
-			'',
-			$elm$core$Maybe$Just($author$project$Side$A),
-			0,
-			A2($elm$core$Array$repeat, 1, ''),
-			0,
-			''),
+		$author$project$Api$Event(0)('')('')('')(
+			$elm$core$Maybe$Just($author$project$Side$A))(0)(
+			A2($elm$core$Array$repeat, 1, ''))(0)('')('')('')(''),
 		$elm$core$List$head(m.events));
 };
 var $elm$virtual_dom$VirtualDom$lazy5 = _VirtualDom_lazy5;
@@ -13069,17 +13100,9 @@ var $elm$html$Html$Lazy$lazy5 = $elm$virtual_dom$VirtualDom$lazy5;
 var $author$project$Game$secondLastEventObj = function (m) {
 	return A2(
 		$elm$core$Maybe$withDefault,
-		A9(
-			$author$project$Api$Event,
-			0,
-			'',
-			'',
-			'',
-			$elm$core$Maybe$Just($author$project$Side$B),
-			0,
-			A2($elm$core$Array$repeat, 1, ''),
-			0,
-			''),
+		$author$project$Api$Event(0)('')('')('')(
+			$elm$core$Maybe$Just($author$project$Side$B))(0)(
+			A2($elm$core$Array$repeat, 1, ''))(0)('')('')('')(''),
 		$elm$core$List$head(
 			A2($elm$core$List$drop, 1, m.events)));
 };
@@ -13305,6 +13328,11 @@ var $author$project$Main$setField = F3(
 			A3($elm$core$Array$set, idx, message, messageArray));
 	});
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $elm$core$String$cons = _String_cons;
+var $elm$core$String$fromChar = function (_char) {
+	return A2($elm$core$String$cons, _char, '');
+};
+var $elm$core$Char$fromCode = _Char_fromCode;
 var $elm$core$Maybe$map2 = F3(
 	function (func, ma, mb) {
 		if (ma.$ === 'Nothing') {
@@ -13347,14 +13375,90 @@ var $author$project$Game$viewEvent = F2(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$elm$html$Html$text(e.name),
-							$elm$html$Html$text(' has joined side '),
-							$elm$html$Html$text(
 							A2(
-								$elm$core$Maybe$withDefault,
-								'',
-								A2($elm$core$Maybe$map, $author$project$Side$toString, e.side))),
-							$elm$html$Html$text('.')
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(e.name),
+									$elm$html$Html$text(' has joined side '),
+									$elm$html$Html$text(
+									A2(
+										$elm$core$Maybe$withDefault,
+										'',
+										A2($elm$core$Maybe$map, $author$project$Side$toString, e.side))),
+									$elm$html$Html$text('.')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Side '),
+									$elm$html$Html$text(
+									A2(
+										$elm$core$Maybe$withDefault,
+										'',
+										A2($elm$core$Maybe$map, $author$project$Side$toString, e.side))),
+									$elm$html$Html$text('\'s demographic information is as follows: ')
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(
+									$elm$core$String$fromChar(
+										$elm$core$Char$fromCode(8195))),
+									$elm$html$Html$text(
+									$elm$core$String$fromChar(
+										$elm$core$Char$fromCode(8195))),
+									A2(
+									$elm$html$Html$strong,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Age : ' + e.user_age)
+										]))
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(
+									$elm$core$String$fromChar(
+										$elm$core$Char$fromCode(8195))),
+									$elm$html$Html$text(
+									$elm$core$String$fromChar(
+										$elm$core$Char$fromCode(8195))),
+									A2(
+									$elm$html$Html$strong,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Gender : ' + e.user_gender)
+										]))
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text(
+									$elm$core$String$fromChar(
+										$elm$core$Char$fromCode(8195))),
+									$elm$html$Html$text(
+									$elm$core$String$fromChar(
+										$elm$core$Char$fromCode(8195))),
+									A2(
+									$elm$html$Html$strong,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text('Country of Origin : ' + e.user_country)
+										]))
+								]))
 						]));
 			case 'player_left':
 				return A2(
@@ -15590,7 +15694,6 @@ var $rtfeldman$elm_css$Css$Structure$concatMapLastStyleBlock = F2(
 			first,
 			A2($rtfeldman$elm_css$Css$Structure$concatMapLastStyleBlock, update, rest));
 	});
-var $elm$core$String$cons = _String_cons;
 var $rtfeldman$elm_css$ElmCssVendor$Murmur3$HashData = F4(
 	function (shift, seed, hash, charsProcessed) {
 		return {charsProcessed: charsProcessed, hash: hash, seed: seed, shift: shift};
@@ -16704,9 +16807,6 @@ var $rtfeldman$elm_css$Css$erroneousHex = function (str) {
 var $elm$core$String$foldr = _String_foldr;
 var $elm$core$String$toList = function (string) {
 	return A3($elm$core$String$foldr, $elm$core$List$cons, _List_Nil, string);
-};
-var $elm$core$String$fromChar = function (_char) {
-	return A2($elm$core$String$cons, _char, '');
 };
 var $elm$core$Basics$pow = _Basics_pow;
 var $rtfeldman$elm_hex$Hex$fromStringHelp = F3(
@@ -18105,7 +18205,7 @@ var $author$project$Main$main = $elm$browser$Browser$application(
 		update: $author$project$Main$update,
 		view: $author$project$Main$view
 	});
-_Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Api.Event":{"args":[],"type":"{ number : Basics.Int, typ : String.String, playerId : String.String, name : String.String, side : Maybe.Maybe Side.Side, index : Basics.Int, message : Array.Array String.String, num_target_words : Basics.Int, rationale : String.String }"},"Api.GameState":{"args":[],"type":"{ id : String.String, seed : String.String, words : List.List String.String, events : List.List Api.Event, oneLayout : List.List Color.Color, twoLayout : List.List Color.Color }"},"Api.Index":{"args":[],"type":"{ autogeneratedId : String.String }"},"Main.Settings":{"args":[],"type":"{ name : String.String }"},"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Cell.Cell":{"args":[],"type":"{ index : Basics.Int, word : String.String, a : ( Basics.Bool, Color.Color ), b : ( Basics.Bool, Color.Color ) }"},"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"},"Api.Update":{"args":[],"type":"{ seed : String.String, events : List.List Api.Event }"}},"unions":{"Main.Msg":{"args":[],"tags":{"NoOp":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"IndexData":["Result.Result Http.Error Api.Index"],"IdChanged":["String.String"],"SubmitNewGame":[],"NextGame":[],"PickSide":["Side.Side"],"GameUpdate":["Game.Msg"],"GotGame":["Result.Result Http.Error Api.GameState"],"ChatMessageChanged":["Array.Array String.String"],"SendChat":[],"ToggleSettings":[],"SettingsEdit":["Main.Settings -> Main.Settings"],"SaveSettings":["Main.Settings"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Color.Color":{"args":[],"tags":{"Tan":[],"Green":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Game.Msg":{"args":[],"tags":{"NoOp":[],"LongPoll":["String.String","String.String","Result.Result Http.Error Api.Update"],"GameUpdate":["Result.Result Http.Error Api.Update"],"WordPicked":["Cell.Cell"],"ToggleKeyView":["Game.KeyView"],"DoneGuessing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Side.Side":{"args":[],"tags":{"A":[],"B":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Game.KeyView":{"args":[],"tags":{"ShowWords":[],"ShowKeycard":[]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});
+_Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Api.Event":{"args":[],"type":"{ number : Basics.Int, typ : String.String, playerId : String.String, name : String.String, side : Maybe.Maybe Side.Side, index : Basics.Int, message : Array.Array String.String, num_target_words : Basics.Int, rationale : String.String, user_age : String.String, user_gender : String.String, user_country : String.String }"},"Api.GameState":{"args":[],"type":"{ id : String.String, seed : String.String, words : List.List String.String, events : List.List Api.Event, oneLayout : List.List Color.Color, twoLayout : List.List Color.Color }"},"Api.Index":{"args":[],"type":"{ autogeneratedId : String.String }"},"Main.Settings":{"args":[],"type":"{ name : String.String }"},"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Cell.Cell":{"args":[],"type":"{ index : Basics.Int, word : String.String, a : ( Basics.Bool, Color.Color ), b : ( Basics.Bool, Color.Color ) }"},"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"},"Api.Update":{"args":[],"type":"{ seed : String.String, events : List.List Api.Event }"}},"unions":{"Main.Msg":{"args":[],"tags":{"NoOp":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"IndexData":["Result.Result Http.Error Api.Index"],"IdChanged":["String.String"],"SubmitNewGame":[],"NextGame":[],"PickSide":["Side.Side"],"GameUpdate":["Game.Msg"],"GotGame":["Result.Result Http.Error Api.GameState"],"ChatMessageChanged":["Array.Array String.String"],"SendChat":[],"ToggleSettings":[],"SettingsEdit":["Main.Settings -> Main.Settings"],"SaveSettings":["Main.Settings"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Color.Color":{"args":[],"tags":{"Tan":[],"Green":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Game.Msg":{"args":[],"tags":{"NoOp":[],"LongPoll":["String.String","String.String","Result.Result Http.Error Api.Update"],"GameUpdate":["Result.Result Http.Error Api.Update"],"WordPicked":["Cell.Cell"],"ToggleKeyView":["Game.KeyView"],"DoneGuessing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Side.Side":{"args":[],"tags":{"A":[],"B":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Game.KeyView":{"args":[],"tags":{"ShowWords":[],"ShowKeycard":[]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});
 
 //////////////////// HMR BEGIN ////////////////////
 
@@ -18671,12 +18771,15 @@ function logSubmit(e) {
   var age = document.getElementById("age-field").value;
   var gender = document.getElementById("gender-field").value;
   var country = document.getElementById("country-field").value;
-  parsedUser["age"] = age;
-  parsedUser["gender"] = gender;
-  parsedUser["country"] = country;
-  encodedUser = JSON.stringify(parsedUser);
-  localStorage.setItem('user', encodedUser);
-  startElmApp();
+
+  if (age != null && String(age).trim().valueOf() != "" && Number.isInteger(Number(age)) && Number(age) > 0 && gender != null && String(gender).trim().valueOf() != "" && /^[A-Za-z\s]*$/.test(String(gender).trim()) && country != null && String(country).trim().valueOf() != "" && /^[A-Za-z\s]*$/.test(String(country).trim())) {
+    parsedUser["age"] = age;
+    parsedUser["gender"] = gender;
+    parsedUser["country"] = country;
+    encodedUser = JSON.stringify(parsedUser);
+    localStorage.setItem('user', encodedUser);
+    startElmApp();
+  }
 }
 
 function startElmApp() {
@@ -18717,7 +18820,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65373" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50518" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
