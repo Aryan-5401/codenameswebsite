@@ -18772,7 +18772,7 @@ function logSubmit(e) {
   var gender = document.getElementById("gender-field").value;
   var country = document.getElementById("country-field").value;
 
-  if (age != null && String(age).trim().valueOf() != "" && Number.isInteger(Number(age)) && Number(age) > 0 && gender != null && String(gender).trim().valueOf() != "" && /^[A-Za-z\s]*$/.test(String(gender).trim()) && country != null && String(country).trim().valueOf() != "" && /^[A-Za-z\s]*$/.test(String(country).trim())) {
+  if ((age == null || String(age).trim().valueOf() == "" || Number.isInteger(Number(age)) && Number(age) > 0) && (gender == null || String(gender).trim().valueOf() == "" || /^[A-Za-z\s]*$/.test(String(gender).trim())) && country != null && String(country).trim().valueOf() != "" && /^[A-Za-z\s]*$/.test(String(country).trim())) {
     parsedUser["age"] = age;
     parsedUser["gender"] = gender;
     parsedUser["country"] = country;
@@ -18820,7 +18820,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50518" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49363" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
