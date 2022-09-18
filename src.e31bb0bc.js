@@ -11565,11 +11565,11 @@ var $author$project$Api$Event = function (number) {
 					return function (index) {
 						return function (message) {
 							return function (num_target_words) {
-								return function (rationale) {
-									return function (user_age) {
-										return function (user_gender) {
-											return function (user_country) {
-												return {index: index, message: message, name: name, num_target_words: num_target_words, number: number, playerId: playerId, rationale: rationale, side: side, typ: typ, user_age: user_age, user_country: user_country, user_gender: user_gender};
+								return function (user_age) {
+									return function (user_gender) {
+										return function (user_country) {
+											return function (error_message) {
+												return {error_message: error_message, index: index, message: message, name: name, num_target_words: num_target_words, number: number, playerId: playerId, side: side, typ: typ, user_age: user_age, user_country: user_country, user_gender: user_gender};
 											};
 										};
 									};
@@ -11613,16 +11613,16 @@ var $elm$core$Array$repeat = F2(
 	});
 var $author$project$Api$decodeEvent = A2(
 	$elm_community$json_extra$Json$Decode$Extra$andMap,
-	A2($elm$json$Json$Decode$field, 'user_country', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'error_message', $elm$json$Json$Decode$string),
 	A2(
 		$elm_community$json_extra$Json$Decode$Extra$andMap,
-		A2($elm$json$Json$Decode$field, 'user_gender', $elm$json$Json$Decode$string),
+		A2($elm$json$Json$Decode$field, 'user_country', $elm$json$Json$Decode$string),
 		A2(
 			$elm_community$json_extra$Json$Decode$Extra$andMap,
-			A2($elm$json$Json$Decode$field, 'user_age', $elm$json$Json$Decode$string),
+			A2($elm$json$Json$Decode$field, 'user_gender', $elm$json$Json$Decode$string),
 			A2(
 				$elm_community$json_extra$Json$Decode$Extra$andMap,
-				A2($elm$json$Json$Decode$field, 'rationale', $elm$json$Json$Decode$string),
+				A2($elm$json$Json$Decode$field, 'user_age', $elm$json$Json$Decode$string),
 				A2(
 					$elm_community$json_extra$Json$Decode$Extra$andMap,
 					A2($elm$json$Json$Decode$field, 'num_target_words', $elm$json$Json$Decode$int),
@@ -11636,7 +11636,7 @@ var $author$project$Api$decodeEvent = A2(
 									'message',
 									$elm$json$Json$Decode$array($elm$json$Json$Decode$string)),
 									$elm$json$Json$Decode$succeed(
-									A2($elm$core$Array$repeat, 7, ''))
+									A2($elm$core$Array$repeat, 11, ''))
 								])),
 						A2(
 							$elm_community$json_extra$Json$Decode$Extra$andMap,
@@ -11874,10 +11874,7 @@ var $author$project$Api$chat = function (r) {
 							A2($elm$json$Json$Encode$array, $elm$json$Json$Encode$string, r.message)),
 							_Utils_Tuple2(
 							'num_target_words',
-							$elm$json$Json$Encode$int(r.num_target_words)),
-							_Utils_Tuple2(
-							'rationale',
-							$elm$json$Json$Encode$string(r.rationale))
+							$elm$json$Json$Encode$int(r.num_target_words))
 						]))),
 			expect: $elm$http$Http$expectWhatever(r.toMsg),
 			url: A2($author$project$Api$endpointUrl, r.client.baseUrl, '/chat')
@@ -12831,7 +12828,7 @@ var $author$project$Main$update = F2(
 									page: A3(
 										$author$project$Main$GameInProgress,
 										g,
-										A2($elm$core$Array$repeat, 7, ''),
+										A2($elm$core$Array$repeat, 11, ''),
 										gameView)
 								}),
 							$author$project$Api$chat(
@@ -12841,10 +12838,6 @@ var $author$project$Main$update = F2(
 									message: message,
 									num_target_words: -1,
 									player: g.player,
-									rationale: A2(
-										$elm$core$Maybe$withDefault,
-										'',
-										A2($elm$core$Array$get, 6, message)),
 									seed: g.seed,
 									toMsg: $elm$core$Basics$always($author$project$Main$NoOp)
 								}));
@@ -12936,7 +12929,7 @@ var $author$project$Main$update = F2(
 											page: A3(
 												$author$project$Main$GameInProgress,
 												gameModel,
-												A2($elm$core$Array$repeat, 7, ''),
+												A2($elm$core$Array$repeat, 11, ''),
 												$author$project$Main$ShowDefault)
 										}),
 									gameCmd);
@@ -12953,7 +12946,7 @@ var $author$project$Main$update = F2(
 											page: A3(
 												$author$project$Main$GameInProgress,
 												gameModel,
-												A2($elm$core$Array$repeat, 7, ''),
+												A2($elm$core$Array$repeat, 11, ''),
 												$author$project$Main$ShowDefault)
 										}),
 									gameCmd);
@@ -13277,12 +13270,15 @@ var $author$project$Main$viewButtonRow = A2(
 			A2($elm$html$Html$div, _List_Nil, _List_Nil)
 		]));
 var $author$project$Main$SendChat = {$: 'SendChat'};
-var $elm$html$Html$Attributes$cols = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'cols',
-		$elm$core$String$fromInt(n));
-};
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $elm$html$Html$form = _VirtualDom_node('form');
 var $author$project$Main$getSubChat = F2(
 	function (idx, messageArray) {
@@ -13313,12 +13309,6 @@ var $elm$html$Html$Events$onSubmit = function (msg) {
 			$elm$html$Html$Events$alwaysPreventDefault,
 			$elm$json$Json$Decode$succeed(msg)));
 };
-var $elm$html$Html$Attributes$rows = function (n) {
-	return A2(
-		_VirtualDom_attribute,
-		'rows',
-		$elm$core$String$fromInt(n));
-};
 var $author$project$Main$ChatMessageChanged = function (a) {
 	return {$: 'ChatMessageChanged', a: a};
 };
@@ -13327,12 +13317,30 @@ var $author$project$Main$setField = F3(
 		return $author$project$Main$ChatMessageChanged(
 			A3($elm$core$Array$set, idx, message, messageArray));
 	});
-var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $elm$core$String$cons = _String_cons;
 var $elm$core$String$fromChar = function (_char) {
 	return A2($elm$core$String$cons, _char, '');
 };
 var $elm$core$Char$fromCode = _Char_fromCode;
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$headingPrivate = F3(
+	function (elemFn, attributes, children_) {
+		return A2(
+			elemFn,
+			A2(
+				$elm$core$List$cons,
+				$elm$html$Html$Attributes$class('alert-header'),
+				attributes),
+			children_);
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$h1 = F2(
+	function (attributes, children_) {
+		return A3($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$headingPrivate, $elm$html$Html$h1, attributes, children_);
+	});
+var $elm$html$Html$h4 = _VirtualDom_node('h4');
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$h4 = F2(
+	function (attributes, children_) {
+		return A3($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$headingPrivate, $elm$html$Html$h4, attributes, children_);
+	});
 var $elm$core$Maybe$map2 = F3(
 	function (func, ma, mb) {
 		if (ma.$ === 'Nothing') {
@@ -13348,6 +13356,203 @@ var $elm$core$Maybe$map2 = F3(
 			}
 		}
 	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Internal$Role$Warning = {$: 'Warning'};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Shown = {$: 'Shown'};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Config = function (a) {
+	return {$: 'Config', a: a};
+};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$attrs = F2(
+	function (attributes, _v0) {
+		var configRec = _v0.a;
+		return $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Config(
+			_Utils_update(
+				configRec,
+				{attributes: attributes}));
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$children = F2(
+	function (children_, _v0) {
+		var configRec = _v0.a;
+		return $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Config(
+			_Utils_update(
+				configRec,
+				{children: children_}));
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Internal$Role$Secondary = {$: 'Secondary'};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$config = $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Config(
+	{attributes: _List_Nil, children: _List_Nil, dismissable: $elm$core$Maybe$Nothing, role: $EdutainmentLIVE$elm_bootstrap$Bootstrap$Internal$Role$Secondary, visibility: $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Shown, withAnimation: false});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$role = F2(
+	function (role_, _v0) {
+		var configRec = _v0.a;
+		return $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Config(
+			_Utils_update(
+				configRec,
+				{role: role_}));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Closed = {$: 'Closed'};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$StartClose = {$: 'StartClose'};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$clickHandler = F2(
+	function (visibility, configRec) {
+		var handleClick = F2(
+			function (viz, toMsg) {
+				return $elm$html$Html$Events$onClick(
+					toMsg(viz));
+			});
+		var _v0 = configRec.dismissable;
+		if (_v0.$ === 'Just') {
+			var dismissMsg = _v0.a;
+			return _List_fromArray(
+				[
+					configRec.withAnimation ? A2(handleClick, $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$StartClose, dismissMsg) : A2(handleClick, $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Closed, dismissMsg)
+				]);
+		} else {
+			return _List_Nil;
+		}
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$injectButton = F2(
+	function (btn, children_) {
+		if (children_.b) {
+			var head = children_.a;
+			var tail = children_.b;
+			return A2(
+				$elm$core$List$cons,
+				head,
+				A2($elm$core$List$cons, btn, tail));
+		} else {
+			return _List_fromArray(
+				[btn]);
+		}
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$isDismissable = function (configRec) {
+	var _v0 = configRec.dismissable;
+	if (_v0.$ === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$maybeAddDismissButton = F3(
+	function (visibilty, configRec, children_) {
+		return $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$isDismissable(configRec) ? A2(
+			$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$injectButton,
+			A2(
+				$elm$html$Html$button,
+				_Utils_ap(
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$type_('button'),
+							$elm$html$Html$Attributes$class('close'),
+							A2($elm$html$Html$Attributes$attribute, 'aria-label', 'close')
+						]),
+					A2($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$clickHandler, visibilty, configRec)),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$attribute, 'aria-hidden', 'true')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('×')
+							]))
+					])),
+			children_) : children_;
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Internal$Role$toClass = F2(
+	function (prefix, role) {
+		return $elm$html$Html$Attributes$class(
+			prefix + ('-' + function () {
+				switch (role.$) {
+					case 'Primary':
+						return 'primary';
+					case 'Secondary':
+						return 'secondary';
+					case 'Success':
+						return 'success';
+					case 'Info':
+						return 'info';
+					case 'Warning':
+						return 'warning';
+					case 'Danger':
+						return 'danger';
+					case 'Light':
+						return 'light';
+					default:
+						return 'dark';
+				}
+			}()));
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$viewAttributes = F2(
+	function (visibility, configRec) {
+		var visibiltyAttributes = _Utils_eq(visibility, $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Closed) ? _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'display', 'none')
+			]) : _List_Nil;
+		var animationAttributes = function () {
+			if (configRec.withAnimation) {
+				var _v0 = configRec.dismissable;
+				if (_v0.$ === 'Just') {
+					var dismissMsg = _v0.a;
+					return _List_fromArray(
+						[
+							A2(
+							$elm$html$Html$Events$on,
+							'transitionend',
+							$elm$json$Json$Decode$succeed(
+								dismissMsg($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Closed)))
+						]);
+				} else {
+					return _List_Nil;
+				}
+			} else {
+				return _List_Nil;
+			}
+		}();
+		var alertAttributes = _List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$attribute, 'role', 'alert'),
+				$elm$html$Html$Attributes$classList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2('alert', true),
+						_Utils_Tuple2(
+						'alert-dismissible',
+						$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$isDismissable(configRec)),
+						_Utils_Tuple2('fade', configRec.withAnimation),
+						_Utils_Tuple2(
+						'show',
+						_Utils_eq(visibility, $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Shown))
+					])),
+				A2($EdutainmentLIVE$elm_bootstrap$Bootstrap$Internal$Role$toClass, 'alert', configRec.role)
+			]);
+		return $elm$core$List$concat(
+			_List_fromArray(
+				[configRec.attributes, alertAttributes, visibiltyAttributes, animationAttributes]));
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$view = F2(
+	function (visibility, _v0) {
+		var configRec = _v0.a;
+		return A2(
+			$elm$html$Html$div,
+			A2($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$viewAttributes, visibility, configRec),
+			A3($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$maybeAddDismissButton, visibility, configRec, configRec.children));
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$simple = F3(
+	function (role_, attributes, children_) {
+		return A2(
+			$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$view,
+			$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$Shown,
+			A2(
+				$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$children,
+				children_,
+				A2(
+					$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$attrs,
+					attributes,
+					A2($EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$role, role_, $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$config))));
+	});
+var $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$simpleWarning = $EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$simple($EdutainmentLIVE$elm_bootstrap$Bootstrap$Internal$Role$Warning);
 var $author$project$Color$toString = function (color) {
 	switch (color.$) {
 		case 'Tan':
@@ -13558,6 +13763,42 @@ var $author$project$Game$viewEvent = F2(
 								$elm$html$Html$text(' took a timer token ending the turn.')
 							]));
 				}
+			case 'chat_error':
+				return (_Utils_eq(
+					e,
+					$author$project$Game$lastEventObj(model)) && _Utils_eq(e.side, model.player.side)) ? A2(
+					$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$simpleWarning,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('myCustomAlertClass'),
+							A2($elm$html$Html$Attributes$style, 'background-color', 'red')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$h1,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'color', 'white'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '20px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Invalid Chat Input')
+								])),
+							A2(
+							$EdutainmentLIVE$elm_bootstrap$Bootstrap$Alert$h4,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'color', 'yellow'),
+									A2($elm$html$Html$Attributes$style, 'margin-left', '17px'),
+									A2($elm$html$Html$Attributes$style, 'font-size', '17px')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(e.error_message)
+								]))
+						])) : $elm$html$Html$text('');
 			default:
 				return $elm$html$Html$text('');
 		}
@@ -13685,6 +13926,17 @@ var $author$project$Main$viewEventBox = F3(
 											$elm$html$Html$Events$onInput(
 											A2($author$project$Main$setField, 1, chatMessage))
 										]),
+									_List_Nil),
+									$elm$html$Html$text(' Rationale '),
+									A2(
+									$elm$html$Html$input,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value(
+											A2($author$project$Main$getSubChat, 6, chatMessage)),
+											$elm$html$Html$Events$onInput(
+											A2($author$project$Main$setField, 6, chatMessage))
+										]),
 									_List_Nil)
 								])),
 							A2(
@@ -13701,6 +13953,17 @@ var $author$project$Main$viewEventBox = F3(
 											A2($author$project$Main$getSubChat, 2, chatMessage)),
 											$elm$html$Html$Events$onInput(
 											A2($author$project$Main$setField, 2, chatMessage))
+										]),
+									_List_Nil),
+									$elm$html$Html$text(' Rationale '),
+									A2(
+									$elm$html$Html$input,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value(
+											A2($author$project$Main$getSubChat, 7, chatMessage)),
+											$elm$html$Html$Events$onInput(
+											A2($author$project$Main$setField, 7, chatMessage))
 										]),
 									_List_Nil)
 								])),
@@ -13719,6 +13982,17 @@ var $author$project$Main$viewEventBox = F3(
 											$elm$html$Html$Events$onInput(
 											A2($author$project$Main$setField, 3, chatMessage))
 										]),
+									_List_Nil),
+									$elm$html$Html$text(' Rationale '),
+									A2(
+									$elm$html$Html$input,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value(
+											A2($author$project$Main$getSubChat, 8, chatMessage)),
+											$elm$html$Html$Events$onInput(
+											A2($author$project$Main$setField, 8, chatMessage))
+										]),
 									_List_Nil)
 								])),
 							A2(
@@ -13735,6 +14009,17 @@ var $author$project$Main$viewEventBox = F3(
 											A2($author$project$Main$getSubChat, 4, chatMessage)),
 											$elm$html$Html$Events$onInput(
 											A2($author$project$Main$setField, 4, chatMessage))
+										]),
+									_List_Nil),
+									$elm$html$Html$text(' Rationale '),
+									A2(
+									$elm$html$Html$input,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$value(
+											A2($author$project$Main$getSubChat, 9, chatMessage)),
+											$elm$html$Html$Events$onInput(
+											A2($author$project$Main$setField, 9, chatMessage))
 										]),
 									_List_Nil)
 								])),
@@ -13753,30 +14038,26 @@ var $author$project$Main$viewEventBox = F3(
 											$elm$html$Html$Events$onInput(
 											A2($author$project$Main$setField, 5, chatMessage))
 										]),
-									_List_Nil)
-								])),
-							A2(
-							$elm$html$Html$div,
-							_List_Nil,
-							_List_fromArray(
-								[
-									$elm$html$Html$text('Rationale/ \n \n Explanation \n \n'),
+									_List_Nil),
+									$elm$html$Html$text(' Rationale '),
 									A2(
-									$elm$html$Html$textarea,
+									$elm$html$Html$input,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$rows(3),
-											$elm$html$Html$Attributes$cols(40),
 											$elm$html$Html$Attributes$value(
-											A2($author$project$Main$getSubChat, 6, chatMessage)),
+											A2($author$project$Main$getSubChat, 10, chatMessage)),
 											$elm$html$Html$Events$onInput(
-											A2($author$project$Main$setField, 6, chatMessage))
+											A2($author$project$Main$setField, 10, chatMessage))
 										]),
 									_List_Nil)
 								])),
 							A2(
 							$elm$html$Html$button,
-							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$disabled(
+									$elm$core$Dict$size(g.players) < 2)
+								]),
 							_List_fromArray(
 								[
 									$elm$html$Html$text('Send')
@@ -14113,15 +14394,6 @@ var $author$project$Game$viewKeycard = F2(
 				]));
 	});
 var $author$project$Game$DoneGuessing = {$: 'DoneGuessing'};
-var $elm$json$Json$Encode$bool = _Json_wrap;
-var $elm$html$Html$Attributes$boolProperty = F2(
-	function (key, bool) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$bool(bool));
-	});
-var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $author$project$Game$InProgress = F3(
 	function (a, b, c) {
 		return {$: 'InProgress', a: a, b: b, c: c};
@@ -14202,7 +14474,7 @@ var $author$project$Game$viewStatus = function (model) {
 	var _v0 = $author$project$Game$status(model);
 	switch (_v0.$) {
 		case 'Start':
-			return A2(
+			return ($elm$core$Dict$size(model.players) < 2) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -14216,7 +14488,23 @@ var $author$project$Game$viewStatus = function (model) {
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Either side may give the first clue!')
+								$elm$html$Html$text('Please wait for another player to join the other side!')
+							]))
+					])) : A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$id('status'),
+						$elm$html$Html$Attributes$class('in-progress')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Players have joined both sides. Either side may give the first clue! No side can start guessing until the other side has sent a clue in the chatbox.')
 							]))
 					]));
 		case 'Lost':
@@ -18205,7 +18493,7 @@ var $author$project$Main$main = $elm$browser$Browser$application(
 		update: $author$project$Main$update,
 		view: $author$project$Main$view
 	});
-_Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Api.Event":{"args":[],"type":"{ number : Basics.Int, typ : String.String, playerId : String.String, name : String.String, side : Maybe.Maybe Side.Side, index : Basics.Int, message : Array.Array String.String, num_target_words : Basics.Int, rationale : String.String, user_age : String.String, user_gender : String.String, user_country : String.String }"},"Api.GameState":{"args":[],"type":"{ id : String.String, seed : String.String, words : List.List String.String, events : List.List Api.Event, oneLayout : List.List Color.Color, twoLayout : List.List Color.Color }"},"Api.Index":{"args":[],"type":"{ autogeneratedId : String.String }"},"Main.Settings":{"args":[],"type":"{ name : String.String }"},"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Cell.Cell":{"args":[],"type":"{ index : Basics.Int, word : String.String, a : ( Basics.Bool, Color.Color ), b : ( Basics.Bool, Color.Color ) }"},"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"},"Api.Update":{"args":[],"type":"{ seed : String.String, events : List.List Api.Event }"}},"unions":{"Main.Msg":{"args":[],"tags":{"NoOp":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"IndexData":["Result.Result Http.Error Api.Index"],"IdChanged":["String.String"],"SubmitNewGame":[],"NextGame":[],"PickSide":["Side.Side"],"GameUpdate":["Game.Msg"],"GotGame":["Result.Result Http.Error Api.GameState"],"ChatMessageChanged":["Array.Array String.String"],"SendChat":[],"ToggleSettings":[],"SettingsEdit":["Main.Settings -> Main.Settings"],"SaveSettings":["Main.Settings"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Color.Color":{"args":[],"tags":{"Tan":[],"Green":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Game.Msg":{"args":[],"tags":{"NoOp":[],"LongPoll":["String.String","String.String","Result.Result Http.Error Api.Update"],"GameUpdate":["Result.Result Http.Error Api.Update"],"WordPicked":["Cell.Cell"],"ToggleKeyView":["Game.KeyView"],"DoneGuessing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Side.Side":{"args":[],"tags":{"A":[],"B":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Game.KeyView":{"args":[],"tags":{"ShowWords":[],"ShowKeycard":[]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});
+_Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)({"versions":{"elm":"0.19.1"},"types":{"message":"Main.Msg","aliases":{"Api.Event":{"args":[],"type":"{ number : Basics.Int, typ : String.String, playerId : String.String, name : String.String, side : Maybe.Maybe Side.Side, index : Basics.Int, message : Array.Array String.String, num_target_words : Basics.Int, user_age : String.String, user_gender : String.String, user_country : String.String, error_message : String.String }"},"Api.GameState":{"args":[],"type":"{ id : String.String, seed : String.String, words : List.List String.String, events : List.List Api.Event, oneLayout : List.List Color.Color, twoLayout : List.List Color.Color }"},"Api.Index":{"args":[],"type":"{ autogeneratedId : String.String }"},"Main.Settings":{"args":[],"type":"{ name : String.String }"},"Url.Url":{"args":[],"type":"{ protocol : Url.Protocol, host : String.String, port_ : Maybe.Maybe Basics.Int, path : String.String, query : Maybe.Maybe String.String, fragment : Maybe.Maybe String.String }"},"Cell.Cell":{"args":[],"type":"{ index : Basics.Int, word : String.String, a : ( Basics.Bool, Color.Color ), b : ( Basics.Bool, Color.Color ) }"},"Array.Tree":{"args":["a"],"type":"Elm.JsArray.JsArray (Array.Node a)"},"Api.Update":{"args":[],"type":"{ seed : String.String, events : List.List Api.Event }"}},"unions":{"Main.Msg":{"args":[],"tags":{"NoOp":[],"LinkClicked":["Browser.UrlRequest"],"UrlChanged":["Url.Url"],"IndexData":["Result.Result Http.Error Api.Index"],"IdChanged":["String.String"],"SubmitNewGame":[],"NextGame":[],"PickSide":["Side.Side"],"GameUpdate":["Game.Msg"],"GotGame":["Result.Result Http.Error Api.GameState"],"ChatMessageChanged":["Array.Array String.String"],"SendChat":[],"ToggleSettings":[],"SettingsEdit":["Main.Settings -> Main.Settings"],"SaveSettings":["Main.Settings"]}},"Array.Array":{"args":["a"],"tags":{"Array_elm_builtin":["Basics.Int","Basics.Int","Array.Tree a","Elm.JsArray.JsArray a"]}},"Color.Color":{"args":[],"tags":{"Tan":[],"Green":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String.String"],"Timeout":[],"NetworkError":[],"BadStatus":["Basics.Int"],"BadBody":["String.String"]}},"Basics.Int":{"args":[],"tags":{"Int":[]}},"List.List":{"args":["a"],"tags":{}},"Maybe.Maybe":{"args":["a"],"tags":{"Just":["a"],"Nothing":[]}},"Game.Msg":{"args":[],"tags":{"NoOp":[],"LongPoll":["String.String","String.String","Result.Result Http.Error Api.Update"],"GameUpdate":["Result.Result Http.Error Api.Update"],"WordPicked":["Cell.Cell"],"ToggleKeyView":["Game.KeyView"],"DoneGuessing":[]}},"Url.Protocol":{"args":[],"tags":{"Http":[],"Https":[]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Side.Side":{"args":[],"tags":{"A":[],"B":[]}},"String.String":{"args":[],"tags":{"String":[]}},"Browser.UrlRequest":{"args":[],"tags":{"Internal":["Url.Url"],"External":["String.String"]}},"Basics.Bool":{"args":[],"tags":{"True":[],"False":[]}},"Elm.JsArray.JsArray":{"args":["a"],"tags":{"JsArray":["a"]}},"Game.KeyView":{"args":[],"tags":{"ShowWords":[],"ShowKeycard":[]}},"Array.Node":{"args":["a"],"tags":{"SubTree":["Array.Tree a"],"Leaf":["Elm.JsArray.JsArray a"]}}}}})}});
 
 //////////////////// HMR BEGIN ////////////////////
 
@@ -18820,7 +19108,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49363" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52365" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
